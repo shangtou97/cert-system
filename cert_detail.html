@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>证书查询</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap-theme.min.css">
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.11.1/jquery.min.js">
+  </script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.0/js/bootstrap.min.js">
+  </script>
+  <style>
+    body {
+      background: #f5f5f5;
+      padding: 15px;
+    }
+    .container {
+      max-width: 800px;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .logo-img {
+      width: 100%;
+      max-height: 80px;
+      object-fit: contain;
+      margin-bottom: 15px;
+    }
+    .active-title {
+      background-color: #337ab7;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    .table tr td:first-child {
+      font-weight: bold;
+      color: #555;
+      width: 30%;
+    }
+    .table tr td:last-child {
+      word-break: break-all;
+    }
+    .status-valid {
+      color: #28a745;
+      font-weight: bold;
+    }
+    .status-invalid {
+      color: #dc3545;
+      font-weight: bold;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 15px;
+      color: #337ab7;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .edit-hint {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 15px;
+      color: #856404;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="edit-hint">
+      ⚡ 模拟查询系统 - 数据可自由修改（修改下方JavaScript中的certData即可）
+    </div>
+    <div class="active-title">
+      🔍 证书查询 &gt;&gt; <span id="companyName">江西鼎誉市政工程有限公司</span>
+    </div>
+    <table class="table table-striped">
+      <tbody id="certData"></tbody>
+    </table>
+    <a href="#" class="back-link">点击返回</a>
+  </div>
+
+  <script>
+    // ============================================
+    // 🔧 在这里修改证书数据（改完保存，刷新浏览器即可）
+    // ============================================
+    var certData = {
+      certno: "16422Q30062R0S",
+      company_name: "江西鼎誉市政工程有限公司",
+      credit_code: "91360100MA35FA7274",
+      standard: "GB/T 19001-2016/ISO 9001:2015 和 GB/T 50430-2017",
+      register_address: "江西省南昌市青云谱区青云谱农场区华东国际工业博览城22号楼C248号",
+      business_address: "江西省南昌市青云谱区青云谱农场区华东国际工业博览城18栋C25号",
+      scope: "资质范围内市政公用工程（含城镇排水管道疏通清淤及养护、非开挖修复）的施工",
+      register_date: "2022-01-20",
+      issue_date: "2022-01-20",
+      renew_date: "2023-03-02",
+      expiry_date: "2025-01-19",
+      status: "有效", // ← 🟢 改这里："有效" 或 "过期失效"
+      cnas: "CNAS",
+      certno_en: "16422Q30062R0S",
+      name_en: "",
+      standard_en: "GB/T 19001-2016/ISO 9001:2015 和 GB/T 50430-2017",
+      register_address_en: "",
+      business_address_en: "",
+      scope_en: "",
+      register_date_en: "2022-01-20",
+      issue_date_en: "2022-01-20",
+      expiry_date_en: "2025-01-19",
+      status_en: "valid" // ← 🟢 改这里："valid" 或 "invalid"
+    };
+
+    // ============================================
+    // 渲染函数 - 自动生成表格（不需要修改）
+    // ============================================
+    function renderCert(data) {
+      var fields = [
+        { label: "证书编号", value: data.certno },
+        { label: "中文名称", value: data.company_name },
+        { label: "统一社会信用代码", value: data.credit_code },
+        { label: "认证依据", value: data.standard },
+        { label: "注册地址", value: data.register_address },
+        { label: "经营地址", value: data.business_address },
+        { label: "认证范围", value: data.scope },
+        { label: "注册日期", value: data.register_date },
+        { label: "发证日期", value: data.issue_date },
+        { label: "换证日期", value: data.renew_date },
+        { label: "有效日期", value: data.expiry_date },
+        { label: "证书状态", value: data.status, isStatus: true },
+        { label: "认可标志", value: data.cnas },
+        { label: "Certificate number", value: data.certno_en },
+        { label: "Name", value: data.name_en },
+        { label: "Certification basis", value: data.standard_en },
+        { label: "Organization registered address", value: data.register_address_en },
+        { label: "The actual business address", value: data.business_address_en },
+        { label: "Certified range", value: data.scope_en },
+        { label: "Registration date", value: data.register_date_en },
+        { label: "Issuing date", value: data.issue_date_en },
+        { label: "Closing date", value: data.expiry_date_en },
+        { label: "Situation", value: data.status_en, isStatusEn: true }
+      ];
+
+      var html = '';
+      for (var i = 0; i < fields.length; i++) {
+        var f = fields[i];
+        // 跳过空值（状态字段除外）
+        if (!f.value && !f.isStatus && !f.isStatusEn) continue;
+
+        var valueHtml = f.value || '';
+        // 状态字段特殊样式
+        if (f.isStatus) {
+          var statusClass = (f.value === '有效') ? 'status-valid' : 'status-invalid';
+          valueHtml = '<span class="' + statusClass + '">' + f.value + '</span>';
+        }
+        if (f.isStatusEn) {
+          var statusClassEn = (f.value === 'valid') ? 'status-valid' : 'status-invalid';
+          valueHtml = '<span class="' + statusClassEn + '">' + f.value + '</span>';
+        }
+
+        html += '<tr><td>' + f.label + '：</td><td>' + valueHtml + '</td></tr>';
+      }
+      // 添加分隔线
+      html += '<tr><td colspan="2"><hr></td></tr>';
+
+      document.getElementById('certData').innerHTML = html;
+      document.getElementById('companyName').textContent = data.company_name;
+    }
+
+    // 页面加载时渲染
+    renderCert(certData);
+  </script>
+
+</body>
+</html>
