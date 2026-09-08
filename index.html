@@ -22,12 +22,6 @@
       padding: 20px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    .logo-img {
-      width: 100%;
-      max-height: 80px;
-      object-fit: contain;
-      margin-bottom: 15px;
-    }
     .active-title {
       background-color: #337ab7;
       color: white;
@@ -56,9 +50,12 @@
 </head>
 <body>
   <div class="container">
+    <!-- ===== 标题 ===== -->
     <div class="active-title">
       🔍 证书查询 &gt;&gt; <span id="companyName">江西鼎誉市政工程有限公司</span>
     </div>
+
+    <!-- ===== 表格 ===== -->
     <table class="table table-striped">
       <tbody id="certData"></tbody>
     </table>
@@ -66,7 +63,7 @@
 
   <script>
     // ============================================
-    // 🔧 在这里修改证书数据（改完保存，刷新浏览器即可）
+    // 🔧 证书数据（修改这里）
     // ============================================
     var certData = {
       certno: "16422Q30062R0S",
@@ -80,21 +77,22 @@
       issue_date: "2022-01-20",
       renew_date: "2023-03-02",
       expiry_date: "2025-01-19",
-      status: "有效", // ← 🟢 改这里："有效" 或 "过期失效"
+      status: "有效",          // ← "有效" 或 "过期失效"
       cnas: "CNAS",
       certno_en: "16422Q30062R0S",
       standard_en: "GB/T 19001-2016/ISO 9001:2015 和 GB/T 50430-2017",
       register_date_en: "2022-01-20",
       issue_date_en: "2022-01-20",
-      expiry_date_en: "2025-01-19",
-      status_en: "valid" // ← 🟢 改这里："valid" 或 "invalid"
+      expiry_date_en: "2025-01-19"
     };
 
     // ============================================
-    // 渲染函数 - 自动生成表格（不需要修改）
+    // 渲染表格
     // ============================================
     function renderCert(data) {
+      // 定义要显示的字段
       var fields = [
+        // === 中文部分 ===
         { label: "证书编号", value: data.certno },
         { label: "中文名称", value: data.company_name },
         { label: "统一社会信用代码", value: data.credit_code },
@@ -108,6 +106,8 @@
         { label: "有效日期", value: data.expiry_date },
         { label: "证书状态", value: data.status, isStatus: true },
         { label: "认可标志", value: data.cnas },
+
+        // === 英文部分（空值保留标题，显示空白） ===
         { label: "Certificate number", value: data.certno_en },
         { label: "Name", value: "" },
         { label: "Certification basis", value: data.standard_en },
@@ -123,30 +123,40 @@
       var html = '';
       for (var i = 0; i < fields.length; i++) {
         var f = fields[i];
-        // 跳过空值（状态字段除外）
-        if (!f.value && !f.isStatus && !f.isStatusEn) continue;
 
-        var valueHtml = f.value || '';
-        // 状态字段特殊样式
+        // 处理空值：如果是空字符串，显示为空白占位
+        var valueHtml = (f.value === "" || f.value === null || f.value === undefined) ? "" : f.value;
+
+        // 中文状态（证书状态）
         if (f.isStatus) {
           var statusClass = (f.value === '有效') ? 'status-valid' : 'status-invalid';
           valueHtml = '<span class="' + statusClass + '">' + f.value + '</span>';
         }
+
+        // 英文状态（Situation）- 固定显示 valid，绿色
         if (f.isStatusEn) {
-          // Situation 固定显示 "valid"，绿色
           valueHtml = '<span class="status-valid">valid</span>';
+        }
+
+        // 如果值为空，显示空白（但保留标题行）
+        if (valueHtml === "" && !f.isStatus && !f.isStatusEn) {
+          valueHtml = "&nbsp;";
         }
 
         html += '<tr><td>' + f.label + '：</td><td>' + valueHtml + '</td></tr>';
       }
-      // 添加分隔线
+
+      // 分隔线
       html += '<tr><td colspan="2"><hr></td></tr>';
 
+      // 渲染到页面
       document.getElementById('certData').innerHTML = html;
+
+      // 更新标题中的公司名称
       document.getElementById('companyName').textContent = data.company_name;
     }
 
-    // 页面加载时渲染
+    // 页面加载执行
     renderCert(certData);
   </script>
 
