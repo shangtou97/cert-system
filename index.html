@@ -83,11 +83,7 @@
       status: "有效", // ← 🟢 改这里："有效" 或 "过期失效"
       cnas: "CNAS",
       certno_en: "16422Q30062R0S",
-      name_en: "",
       standard_en: "GB/T 19001-2016/ISO 9001:2015 和 GB/T 50430-2017",
-      register_address_en: "",
-      business_address_en: "",
-      scope_en: "",
       register_date_en: "2022-01-20",
       issue_date_en: "2022-01-20",
       expiry_date_en: "2025-01-19",
@@ -113,15 +109,15 @@
         { label: "证书状态", value: data.status, isStatus: true },
         { label: "认可标志", value: data.cnas },
         { label: "Certificate number", value: data.certno_en },
-        { label: "Name", value:  },
+        { label: "Name", value: "" },
         { label: "Certification basis", value: data.standard_en },
-        { label: "Organization registered address", value:  },
-        { label: "The actual business address", value:  },
-        { label: "Certified range", value: },
+        { label: "Organization registered address", value: "" },
+        { label: "The actual business address", value: "" },
+        { label: "Certified range", value: "" },
         { label: "Registration date", value: data.register_date_en },
         { label: "Issuing date", value: data.issue_date_en },
         { label: "Closing date", value: data.expiry_date_en },
-        { label: "Situation", value: invalid, isStatusEn: true }
+        { label: "Situation", value: "valid", isStatusEn: true }
       ];
 
       var html = '';
@@ -137,8 +133,8 @@
           valueHtml = '<span class="' + statusClass + '">' + f.value + '</span>';
         }
         if (f.isStatusEn) {
-          var statusClassEn = (f.value === 'valid') ? 'status-valid' : 'status-invalid';
-          valueHtml = '<span class="' + statusClassEn + '">' + f.value + '</span>';
+          // Situation 固定显示 "valid"，绿色
+          valueHtml = '<span class="status-valid">valid</span>';
         }
 
         html += '<tr><td>' + f.label + '：</td><td>' + valueHtml + '</td></tr>';
